@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import 'jquery'
 import 'element-ui/lib/theme-chalk/index.css'
+import '../src/assets/css/global.min.css'
 
 Vue.config.productionTip = false
 
