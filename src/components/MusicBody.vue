@@ -23,10 +23,21 @@
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
                               <div class="list_check"><i></i></div>
-                              <div class="list_number">1</div>
-                              <div class="list_name">不安理智</div>
+                              <div class="list_number list_number2">1</div>
+                              <div class="list_name">
+                                不安理智
+                                <div class="list_menu">
+                                  <a href="javascript:;" title="播放" class="list_menu_play"></a>
+                                  <a href="javascript:;" title="添加到歌单"></a>
+                                  <a href="javascript:;" title="下载"></a>
+                                  <a href="javascript:;" title="分享"></a>
+                                </div>
+                              </div>
                               <div class="list_singer">网络歌手</div>
-                              <div class="list_time">03：41</div>
+                              <div class="list_time">
+                                <span>03：41</span>
+                                <a href="javascript:;" title="删除" class="list_menu_del"></a>
+                              </div>
                             </li>
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
@@ -47,7 +58,7 @@
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
                               <div class="list_check"><i></i></div>
-                              <div class="list_number">3</div>
+                              <div class="list_number">4</div>
                               <div class="list_name">庐州月</div>
                               <div class="list_singer">许嵩</div>
                               <div class="list_time">03：41</div>
@@ -55,7 +66,7 @@
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
                               <div class="list_check"><i></i></div>
-                              <div class="list_number">3</div>
+                              <div class="list_number">5</div>
                               <div class="list_name">庐州月</div>
                               <div class="list_singer">许嵩</div>
                               <div class="list_time">03：41</div>
@@ -63,7 +74,7 @@
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
                               <div class="list_check"><i></i></div>
-                              <div class="list_number">3</div>
+                              <div class="list_number">6</div>
                               <div class="list_name">庐州月</div>
                               <div class="list_singer">许嵩</div>
                               <div class="list_time">03：41</div>
@@ -71,7 +82,7 @@
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
                               <div class="list_check"><i></i></div>
-                              <div class="list_number">3</div>
+                              <div class="list_number">7</div>
                               <div class="list_name">庐州月</div>
                               <div class="list_singer">许嵩</div>
                               <div class="list_time">03：41</div>
@@ -79,7 +90,7 @@
                             <i class="player_songlist__line"></i>
                             <li class="list_music">
                               <div class="list_check"><i></i></div>
-                              <div class="list_number">3</div>
+                              <div class="list_number">8</div>
                               <div class="list_name">庐州月</div>
                               <div class="list_singer">许嵩</div>
                               <div class="list_time">03：41</div>
@@ -121,6 +132,8 @@ export default {
 
 <style lang='sass' scoped>
 $green-color: #31c27c
+.el-scrollbar__wrap
+  overflow-x: hidden
 .player_bd
     width: 100%
     height: 550px // 460px
@@ -188,17 +201,53 @@ $green-color: #31c27c
             .list_number
               width: 36px
               height: 100%
-              text-align: right
-              padding-right: 8px
+              // text-align: right
+              // padding-right: 8px
+            .list_number2
+              color: transparent
+              background: url("../assets/wave.gif") no-repeat 0 center
             .list_name
               width: 50%
               height: 100%
+              .list_menu
+                margin-top: 5px
+                float: right
+                margin-right: 20px
+                a
+                  display: inline-block
+                  width: 36px
+                  height: 36px
+                  background: url("../assets/icon_list_menu.png") no-repeat 0 0
+                  opacity: 0.5
+                  &:hover
+                    opacity: 1
+                  &:nth-child(1)
+                    background-position: -120px 0
+                  &:nth-child(2)
+                    background-position: -120px -80px
+                  &:nth-child(3)
+                    background-position: -120px -120px
+                  &:nth-child(4)
+                    background-position: -120px -40px
+                .list_menu_play
+                  background-position: -80px -200px !important
             .list_singer
               width: 20%
               height: 100%
             .list_time
               width: 100px
               height: 100%
+              a
+                display: inline-block
+                width: 36px
+                height: 36px
+                background: url("../assets/icon_list_menu.png") no-repeat -120px -160px
+                margin-top: 5px
+                // display: none
+                opacity: 0.5
+                float: left
+                &:hover
+                  opacity: 1
         .content_right
           float: right
           width: 400px
