@@ -13,7 +13,7 @@ Vue.prototype.$http = axios
 // 配置请求的根路径
 axios.defaults.baseURL = '/api/'
 axios.defaults.withCredentials = true // 允许跨域设置，不然可能因为拿不到cookie而报错
-/* eslint-disable no-new */
+// eslint-disable-next-line no-new
 new Vue({
   el: '#app',
   router,

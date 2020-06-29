@@ -135,156 +135,159 @@ $green-color: #31c27c
 .el-scrollbar__wrap
   overflow-x: hidden
 .player_bd
-    width: 100%
-    height: 550px // 460px
-    .content
-        width: 1300px
-        height: 500px
-        margin: 0 auto
-        font-size: 14px
-        .content_left
-          width: 861px
+  width: 100%
+  height: 550px // 460px
+  .content
+    width: 1300px
+    height: 500px
+    margin: 0 auto
+    font-size: 14px
+    .content_left
+      width: 861px
+      height: 100%
+      float: left
+      padding-top: 20px
+      li
+        list-style: none
+        width: 100%
+        height: 50px
+        box-sizing: border-box
+        -webkit-user-select: none
+      .player_songlist__line
+        display: block
+        width: 100%
+        height: 1px
+        background-color: rgba(255, 255, 255, 0.3)
+      .mod_songlist_toolbar
+        position: relative
+        margin-bottom: 20px
+        display: block
+        width: 100%
+        height: 40px
+        // margin-left: 20px
+        box-sizing: border-box
+        a
+          border: 1px solid #fff
+          display: inline-block
+          width: 122px
           height: 100%
+          border-radius: 5px
+          color: #fff
+          opacity: 0.5
+          text-align: center
+          line-height: 40px
+          text-decoration: none
+          &:hover
+            opacity: 1.0
+      .content_list
+        height: 420px
+        overflow: auto
+        ul
+          padding: 0
+        div
           float: left
-          padding-top: 20px
-          li
-            list-style: none
-            width: 100%
-            height: 50px
-            box-sizing: border-box
-            -webkit-user-select: none
-          .player_songlist__line
-            display: block
-            width: 100%
-            height: 1px
-            background-color: rgba(255, 255, 255, 0.3)
-          .mod_songlist_toolbar
-            position: relative
-            margin-bottom: 20px
-            display: block
-            width: 100%
-            height: 40px
-            margin-left: 15px
-            a
-              border: 1px solid #fff
-              display: inline-block
-              width: 122px
-              height: 100%
-              border-radius: 5px
-              color: #fff
-              opacity: 0.5
-              text-align: center
-              line-height: 40px
-              text-decoration: none
-              &:hover
-                opacity: 1.0
-          .content_list
-            height: 420px
-            overflow: auto
-            div
-              float: left
-              color: rgba(255, 255, 255, 0.5)
-              line-height: 50px
-            .list_check
-              width: 50px
-              height: 100%
-              text-align: center
-              i
-                width: 14px
-                height: 14px
-                border: 1px solid #fff
-                display: inline-block
-                opacity: 0.5
-            .list_checked i
-              background: url("../assets/icon_sprite.png") no-repeat -60px -80px
-              opacity: 1
-            .list_number
-              width: 36px
-              height: 100%
-              // text-align: right
-              // padding-right: 8px
-            .list_number2
-              color: transparent
-              background: url("../assets/wave.gif") no-repeat 0 center
-            .list_name
-              width: 50%
-              height: 100%
-              .list_menu
-                margin-top: 5px
-                float: right
-                margin-right: 20px
-                a
-                  display: inline-block
-                  width: 36px
-                  height: 36px
-                  background: url("../assets/icon_list_menu.png") no-repeat 0 0
-                  opacity: 0.5
-                  &:hover
-                    opacity: 1
-                  &:nth-child(1)
-                    background-position: -120px 0
-                  &:nth-child(2)
-                    background-position: -120px -80px
-                  &:nth-child(3)
-                    background-position: -120px -120px
-                  &:nth-child(4)
-                    background-position: -120px -40px
-                .list_menu_play
-                  background-position: -80px -200px !important
-            .list_singer
-              width: 20%
-              height: 100%
-            .list_time
-              width: 100px
-              height: 100%
-              a
-                display: inline-block
-                width: 36px
-                height: 36px
-                background: url("../assets/icon_list_menu.png") no-repeat -120px -160px
-                margin-top: 5px
-                // display: none
-                opacity: 0.5
-                float: left
-                &:hover
-                  opacity: 1
-        .content_right
-          float: right
-          width: 400px
+          color: rgba(255, 255, 255, 0.5)
+          line-height: 50px
+        .list_check
+          width: 50px
           height: 100%
-          -webkit-user-select: none
-          padding-top: 20px
-          bordersi
-          .song_info
-            color: rgba(255, 255, 255, 0.7)
-            text-align: center
-            line-height: 30px
+          text-align: center
+          i
+            width: 14px
+            height: 14px
+            border: 1px solid #fff
+            display: inline-block
+            opacity: 0.5
+        .list_checked i
+          background: url("../assets/icon_sprite.png") no-repeat -60px -80px
+          opacity: 1
+        .list_number
+          width: 36px
+          height: 100%
+          // text-align: right
+          // padding-right: 8px
+        .list_number2
+          color: transparent
+          background: url("../assets/wave.gif") no-repeat 0 center
+        .list_name
+          width: 50%
+          height: 100%
+          .list_menu
+            margin-top: 5px
+            float: right
+            margin-right: 20px
             a
-              list-style: none
-              color: rgba(255, 255, 255, 0.7)
-              text-decoration: none
-              &:hover
-                color: rgba(255, 255, 255, 1)
-            .song_info__cover
               display: inline-block
-              width: 201px
-              height: 180px
-              text-align: left
-              background: url(https://y.gtimg.cn/mediastyle/yqq/img/album_cover_player.png?max_age=2592000&v=23ea536d34facedf9ae4169d95b1056e) 0 0 no-repeat
-              img
-                width: 180px
-                height: 180px
-          .song_lyric
-            text-align: center
-            margin-top: 30px
-            height: 150px
-            overflow: hidden
-            li
-              list-style: none
-              line-height: 30px
-              font-weight: bold
-              color: rgba(255, 255, 255, 0.5)
-              cursor: -webkit-grab
-            .song_lyric_cur
-              color: $green-color
+              width: 36px
+              height: 36px
+              background: url("../assets/icon_list_menu.png") no-repeat 0 0
+              opacity: 0.5
+              &:hover
+                opacity: 1
+              &:nth-child(1)
+                background-position: -120px 0
+              &:nth-child(2)
+                background-position: -120px -80px
+              &:nth-child(3)
+                background-position: -120px -120px
+              &:nth-child(4)
+                background-position: -120px -40px
+            .list_menu_play
+              background-position: -80px -200px !important
+        .list_singer
+          width: 20%
+          height: 100%
+        .list_time
+          width: 100px
+          height: 100%
+          a
+            display: inline-block
+            width: 36px
+            height: 36px
+            background: url("../assets/icon_list_menu.png") no-repeat -120px -160px
+            margin-top: 5px
+            // display: none
+            opacity: 0.5
+            float: left
+            &:hover
+              opacity: 1
+    .content_right
+      float: right
+      width: 400px
+      height: 100%
+      -webkit-user-select: none
+      padding-top: 20px
+      bordersi
+      .song_info
+        color: rgba(255, 255, 255, 0.7)
+        text-align: center
+        line-height: 30px
+        a
+          list-style: none
+          color: rgba(255, 255, 255, 0.7)
+          text-decoration: none
+          &:hover
+            color: rgba(255, 255, 255, 1)
+        .song_info__cover
+          display: inline-block
+          width: 201px
+          height: 180px
+          text-align: left
+          background: url(https://y.gtimg.cn/mediastyle/yqq/img/album_cover_player.png?max_age=2592000&v=23ea536d34facedf9ae4169d95b1056e) 0 0 no-repeat
+          img
+            width: 180px
+            height: 180px
+      .song_lyric
+        text-align: center
+        margin-top: 30px
+        height: 150px
+        overflow: hidden
+        li
+          list-style: none
+          line-height: 30px
+          font-weight: bold
+          color: rgba(255, 255, 255, 0.5)
+          cursor: -webkit-grab
+        .song_lyric_cur
+          color: $green-color
 </style>
