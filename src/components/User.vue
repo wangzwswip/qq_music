@@ -126,7 +126,6 @@ export default {
       <a href="javascript:;" class="player_login__out js_logout" >退出</a></span>`
       console.log(this.avataUrl)
       $('.player_login__guide').after($text)
-      $('#')
     },
     // 登录按钮，提交登录信息
     login () {
@@ -144,12 +143,25 @@ export default {
           this.$message.error('登录失败')
         }
         this.$message.success('登录成功')
+        this.login2()
         this.login_dialogVisible = false
         window.sessionStorage.setItem('token', res.token)
         this.avataUrl = profiles['avatarUrl']
         this.nickname = profiles['nickname']
-        this.login_handle()
+        // document.cookie = avataUrl=
       })
+    },
+    // 刷新页面保持登录状态
+    async login2 () {
+      this.$http.defaults.headers.common['token'] = sessionStorage.getItem('token')
+      const { data: res2 } = await this.$http.get('login/status')
+      if (res2.code !== 200) {
+        this.$message.error('失败')
+      }
+      const { profile: profiles } = res2
+      this.avataUrl = profiles['avatarUrl']
+      this.nickname = profiles['nickname']
+      this.login_handle()
     },
     // 鼠标移入右上角事件
     mouseOver () {
@@ -160,6 +172,12 @@ export default {
     }
   },
   created: function () {
+    console.log(this.avataUrl)
+  },
+  mounted () {
+    if (sessionStorage.getItem('token')) {
+      this.login2()
+    }
   }
 }
 </script>
@@ -250,15 +268,18 @@ $green-color: #31c27c
     text-decoration: none
     color: #fff
     margin-left: 7px
+    // opacity: 0.3
+    &:hover
+      opacity: 1
+  .player_login__txt
+    display: inline-block
+    max-width: 124px
+    font-size: 14px
     opacity: 0.3
-    .player_login_text
-      display: inline-block
-      max-width: 124px
-      vertical-align: top
-      font-size: 14px
-      line-height: 30px
-      color: #fff
-      opacity: .3
+    &:hover
+      opacity: 1
+  .player_login_class
+    opacity: 0.3
     &:hover
       opacity: 1
   .player_login_link
@@ -274,9 +295,11 @@ $green-color: #31c27c
       border-radius: 90px
       vertical-align: -10px
       margin-right: 5px
+      opacity: 1
   .player_login__link--set
     vertical-align: middle
   .player_login__out
+    opacity: 0.3
     visibility:hidden
     vertical-align: middle
 </style>
