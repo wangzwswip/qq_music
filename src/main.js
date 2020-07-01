@@ -7,9 +7,12 @@ import 'jquery'
 import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../src/assets/css/global.min.css'
+import store from '../store'
+import Player from '../src/utils/player'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+Vue.prototype.$Player = Player
 // 配置请求的根路径
 axios.defaults.baseURL = '/api/'
 axios.defaults.withCredentials = true // 允许跨域设置，不然可能因为拿不到cookie而报错
@@ -17,6 +20,7 @@ axios.defaults.withCredentials = true // 允许跨域设置，不然可能因为
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

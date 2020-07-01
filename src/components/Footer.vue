@@ -33,7 +33,40 @@
 </template>
 
 <script>
-export default {}
+import PubSub from 'pubsub-js'
+export default {
+  methods: {
+    initFooterEvents () {
+      var $musicPlay = $('.music_play')
+      if (this.$store.playstate) {
+        // 当前子菜单的播放按钮是播放状态
+        $musicPlay.addClass('music_play2')
+      }
+    },
+    // 切换播放和暂停供子组件使用
+    togglePlay (play) {
+      var $musicPlay = $('.music_play')
+      if (play) {
+        $musicPlay.addClass('music_play2')
+      } else {
+        $musicPlay.removeClass('music_play2')
+      }
+    }
+  },
+  mounted: function () {
+    // 订阅消息
+    PubSub.subscribe('togglePlay', (msg, index) => {
+      this.togglePlay(index)
+    })
+    // 初始化
+    $('.music_play').removeClass('music_play2')
+    // 监听底部播放按钮的点击
+    $('.music_play').click(function () {
+      PubSub.publish('togglePlayBody', true)
+    //   $('.music_play').toggleClass('music_play2')
+    })
+  }
+}
 </script>
 
 <style lang='sass' scoped>

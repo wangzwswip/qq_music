@@ -41,7 +41,7 @@
         </a>
       </div>
     </div>
-    <MusicBody></MusicBody>
+    <MusicBody :userInfo='userInfo'></MusicBody>
     <Footer />
     <div class="mask_bg"></div>
     <div class="mask"></div>
@@ -101,10 +101,17 @@ export default {
           { min: 6, message: '长度最少为6位', trigger: 'blur' }
         ]
       },
-      // 用户头像地址
-      avataUrl: '',
-      // 用户名
-      nickname: ''
+      // 用户信息
+      userInfo: {
+        // 头像地址
+        avataUrl: '',
+        // 昵称
+        nickname: '',
+        // 用户id
+        userId: '',
+        // 用户名
+        userName: ''
+      }
     }
   },
   components: {
@@ -121,10 +128,10 @@ export default {
       $('.player_login__link--unlogin').css('display', 'none')
       $('.player_login__link--set').css('display', 'none')
       var $text = `<span id="player_login"><a class="player_login_link" href="javascript:;" target="_blank">
-      <img src="${this.avataUrl}" width="34px" height="34px"><span class="player_login_class">${this.nickname}</span></a>
+      <img src="${this.userInfo.avataUrl}" width="34px" height="34px"><span class="player_login_class">${this.userInfo.nickname}</span></a>
       <a class="player_login__link player_login__link--set js_opts_login" href="javascript:;"><span class="player_login__txt">设置</span></a>
       <a href="javascript:;" class="player_login__out js_logout" >退出</a></span>`
-      console.log(this.avataUrl)
+      console.log(this.userInfo.avataUrl)
       $('.player_login__guide').after($text)
     },
     // 登录按钮，提交登录信息
@@ -139,16 +146,20 @@ export default {
           this.loginForm
         )
         const { profile: profiles } = res
+        const {account: accounts} = res
         if (res.code !== 200) {
           this.$message.error('登录失败')
+        } else {
+          this.$message.success('登录成功')
+          this.login_dialogVisible = false
+          window.sessionStorage.setItem('token', res.token)
+          this.userInfo.avataUrl = profiles['avatarUrl']
+          this.userInfo.nickname = profiles['nickname']
+          this.userInfo.userId = accounts['id']
+          this.userInfo.userName = accounts['userName']
+          document.cookie = 'userId=' + this.userInfo.userId
+          this.login2()
         }
-        this.$message.success('登录成功')
-        this.login2()
-        this.login_dialogVisible = false
-        window.sessionStorage.setItem('token', res.token)
-        this.avataUrl = profiles['avatarUrl']
-        this.nickname = profiles['nickname']
-        // document.cookie = avataUrl=
       })
     },
     // 刷新页面保持登录状态
@@ -159,8 +170,9 @@ export default {
         this.$message.error('失败')
       }
       const { profile: profiles } = res2
-      this.avataUrl = profiles['avatarUrl']
-      this.nickname = profiles['nickname']
+      this.userInfo.avataUrl = profiles['avatarUrl']
+      this.userInfo.nickname = profiles['nickname']
+      this.userInfo.userId = profiles['id']
       this.login_handle()
     },
     // 鼠标移入右上角事件
@@ -171,13 +183,12 @@ export default {
       $('.player_login__out').css('visibility', 'hidden')
     }
   },
-  created: function () {
-    console.log(this.avataUrl)
-  },
+  created: function () {},
   mounted () {
     if (sessionStorage.getItem('token')) {
       this.login2()
     }
+    this.$store.commit('songPause')
   }
 }
 </script>
