@@ -72,6 +72,7 @@
 <script>
 import MusicBody from '../components/MusicBody'
 import Footer from '../components/Footer'
+import PubSub from 'pubsub-js'
 export default {
   data () {
     // 验证手机号规则
@@ -181,10 +182,19 @@ export default {
     },
     mouseOut () {
       $('.player_login__out').css('visibility', 'hidden')
+    },
+    // 更新大背景
+    toggleBackground (cover) {
+      var $musicBg = $('.mask_bg')
+      $musicBg.css('background', "url('" + cover + "')")
     }
   },
   created: function () {},
   mounted () {
+    // 订阅消息，从MusicBody来更新封面背景
+    PubSub.subscribe('toggleBackground', (msg, index) => {
+      this.toggleBackground(index)
+    })
     if (sessionStorage.getItem('token')) {
       this.login2()
     }

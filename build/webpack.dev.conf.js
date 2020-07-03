@@ -28,6 +28,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
       ],
     },
+    // proxyTable: {
+    //   '/api': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   }
+    // },
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,

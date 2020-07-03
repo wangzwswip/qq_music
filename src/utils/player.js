@@ -6,7 +6,7 @@
   // eslint-disable-next-line no-unused-expressions
   Player.prototype = {
     constructor: Player,
-    musicList: [1, 2, 3],
+    musicList: [],
     init: function ($audio) {
       this.$audio = $audio
       this.audio = $audio.get(0) // 获取个原生的
@@ -14,7 +14,8 @@
     currentIndex: -1,
     playMusic: function (index, music) {
       // 判断是否时同一首音乐
-      if (this.currentIndex === index) {
+      // eslint-disable-next-line eqeqeq
+      if (this.currentIndex == index) {
         // 同一首音乐
         if (this.audio.paused) {
           this.audio.play()
@@ -27,13 +28,59 @@
         this.$audio.attr('src', 'https://music.163.com/song/media/outer/url?id=' + music.id + '.mp3')
         this.audio.play()
         this.currentIndex = index
+        // console.log('来自player的')
+        // console.log(this.currentIndex)
       }
+    },
+    preIndex: function () {
+      var index = this.currentIndex - 1
+      if (index < 0) {
+        index = this.musicList.length - 1
+      }
+      return index
+    },
+    nextIndex: function () {
+      var index = this.currentIndex + 1
+      if (index > this.musicList.length - 1) {
+        index = 0
+      }
+      return index
+    },
+    changeMusic: function (index) {
+      // 删除对应的数据
+      this.musicList.splice(index, 1)
+      // 判断当前删除的是否是正在播放的前面
+      if (index < this.currentIndex) {
+        this.currentIndex = this.currentIndex - 1
+      }
+    },
+    // getMusicDuration: function () {
+    //   return this.audio.duration
+    // },
+    // getMusicCurrentTime: function () {
+    //   return this.audio.currentTime
+    // },
+    formatTime (time) {
+      var Min = parseInt(time / 60)
+      var Sec = parseInt(time % 60)
+      if (Min < 10) {
+        Min = '0' + Min
+      }
+      if (Sec < 10) {
+        Sec = '0' + Sec
+      }
+      return Min + ':' + Sec
+    },
+    musicTimeUpdate: function (callBack) {
+      var $this = this
+      this.$audio.on('timeupdate', function () {
+        // console.log($this.player.getMusicDuration(), $this.player.getMusicCurrentTime())
+        var duration = $this.audio.duration
+        var currentTime = $this.audio.currentTime
+        var timeStr = $this.formatTime(currentTime) + '/' + $this.formatTime(duration)
+        callBack([currentTime, duration, timeStr])
+      })
     }
-    // requireSongurl: async function (id) {
-    //   const {data: res} = await this.$http.get('playlist/url?id=' + id)
-    //   console.log(res[0].url)
-    //   return res[0].url
-    // }
   }
   Player.prototype.init.prototype = Player.prototype
   window.Player = Player

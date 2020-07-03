@@ -34,6 +34,7 @@
 
 <script>
 import PubSub from 'pubsub-js'
+import $ from 'jquery'
 export default {
   methods: {
     initFooterEvents () {
@@ -51,12 +52,40 @@ export default {
       } else {
         $musicPlay.removeClass('music_play2')
       }
+    },
+    // 更新底部进度条歌曲信息
+    toggleFooterSong (music) {
+      var $musicProgressName = $('.music_progress_name')
+      var $musicProgressTime = $('.music_progress_time')
+
+      $musicProgressName.text(music.name + ' / ' + music.singer)
+      $musicProgressTime.text('00:00 / ' + music.time)
+    },
+    toggleFooterTime (data) { // currentTime, duration, timeStr
+      // 同步时间
+      $('.music_progress_time').text(data[2])
+      // 同步进度条
+      var value = data[0] / data[1] * 100
+      this.progress.setProgess(value)
     }
   },
   mounted: function () {
+    // 进度条
+    var $progressBar = $('.music_progress_bar')
+    var $progressLine = $('.music_progress_line')
+    var $progressDot = $('.music_progress_dot')
+    this.progress = this.$Progress($progressBar, $progressLine, $progressDot)
+    this.progress.progressMove()
+    this.progress.progressClick()
     // 订阅消息
     PubSub.subscribe('togglePlay', (msg, index) => {
       this.togglePlay(index)
+    })
+    PubSub.subscribe('toggleFooterSong', (msg, index) => {
+      this.toggleFooterSong(index)
+    })
+    PubSub.subscribe('toggleFooterTime', (msg, index) => {
+      this.toggleFooterTime(index)
     })
     // 初始化
     $('.music_play').removeClass('music_play2')
@@ -64,6 +93,16 @@ export default {
     $('.music_play').click(function () {
       PubSub.publish('togglePlayBody', true)
     //   $('.music_play').toggleClass('music_play2')
+    })
+    // 监听底部控制区域上一首按钮的点击
+    $('.music_pre').click(function () {
+    //   console.log('上一首')
+      PubSub.publish('togglePreBody')
+    })
+    // 监听底部控制区域下一首按钮的点击
+    $('.music_next').click(function () {
+    //   console.log('下一首footer')
+      PubSub.publish('toggleNextBody')
     })
   }
 }
@@ -176,9 +215,10 @@ export default {
                 margin-top: 5px
                 position: relative
                 .music_progress_line
-                    width: 100px
+                    width: 0px
                     height: 100%
                     background: #fff
+                    // position: relative
                     .music_progress_dot
                         width: 14px
                         height: 14px
@@ -186,7 +226,7 @@ export default {
                         background: #fff
                         position: absolute
                         top: -5px
-                        left: 100px
+                        left: 0px
         .music_voice_info
             display: inline-block;
             width: 100px

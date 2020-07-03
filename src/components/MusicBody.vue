@@ -44,12 +44,12 @@
             </div>
             <div class="content_right">
               <div class="song_info">
-                <a href="javascirpt:;" class="song_info__cover js_album" data-stat="y_new.player.info_area.albumpic">
+                <a href="javascirpt:;" class="song_info__cover js_album">
                   <img src="https://y.gtimg.cn/music/photo_new/T002R300x300M000002CJON012PxwU.jpg?max_age=2592000" id="song_pic" alt="" class="song_info__pic" title="" style="">
                 </a>
-                <div class="song_info__name" id="song_name">歌曲名：<a href="https://y.qq.com/n/yqq/song/001LuLtP1LqITK.html#stat=y_new.player.info_area.songname" title="庐州月" target="_blank">庐州月</a></div>
-                <div class="song_info__singer" id="singer_name">歌手名：<a href="https://y.qq.com/n/yqq/singer/000CK5xN3yZDJt.html#stat=y_new.player.info_area.singername" title="许嵩" class="js_singer" rel="noopener nofollow" target="_blank">许嵩</a></div>
-                <div class="song_info__album" id="album_name">专辑名：<a href="https://y.qq.com/n/yqq/album/002CJON012PxwU.html#stat=y_new.player.info_area.albumname" title="寻雾启示" target="_blank">寻雾启示</a></div>
+                <div class="song_info__name" id="song_name">歌曲名：<a href="javascrpt:;" title="庐州月" target="_blank">庐州月</a></div>
+                <div class="song_info__singer" id="singer_name">歌手名：<a href="javascrpt:;" title="许嵩" class="js_singer" rel="noopener nofollow" target="_blank">许嵩</a></div>
+                <div class="song_info__album" id="album_name">专辑名：<a href="javascrpt:;" title="寻雾启示" target="_blank">寻雾启示</a></div>
               </div>
               <div class="song_lyric">
                 <li class="song_lyric_cur">儿时凿壁偷了谁家的光</li>
@@ -112,9 +112,7 @@ export default {
     },
     // 请求歌单对应歌曲id
     async requireListId () {
-      const $audio = $('audio')
-      const player = new this.$Player($audio)
-      console.log(player.musicList)
+      // console.log(player.musicList)
       var songInfo = this.songInfo
       var soninfotmp = {}
       var tmpsinger = ''
@@ -127,6 +125,8 @@ export default {
         $.each(trackss, function (index, ele) {
           soninfotmp.name = ele.name
           soninfotmp.id = ele.id
+          soninfotmp.album = ele.al.name
+          soninfotmp.cover = ele.al.picUrl
           soninfotmp.time = Math.round(ele.dt / 1000)
           $.each(ele.ar, function (index, eles) {
             if (index === 0) {
@@ -141,12 +141,13 @@ export default {
           soninfotmp = {}
         })
         // eslint-disable-next-line no-undef
-        player.musicList = songInfo
+        this.player.musicList = songInfo
         // console.log(player.musicList)
         // console.log(this.songInfo)
         this.creatList()
+        this.initMusicInfo(songInfo[0])
       }
-      this.initEvents(player)
+      this.initEvents()
       // this.addSongUrl()
     },
     // 加载歌曲URL
@@ -209,8 +210,28 @@ export default {
     requireSongInfo () {
       this.$http.get()
     },
+    // 初始化歌曲信息
+    initMusicInfo (music) {
+      var $musicImage = $('.song_info__cover img')
+      var $musicName = $('.song_info__name a')
+      var $musicSinger = $('.song_info__singer a')
+      var $musicAlbum = $('.song_info__album a')
+
+      // 给取到的元素赋值
+      $musicImage.attr('src', music.cover)
+      $musicName.attr('title', music.name)
+      $musicName.text(music.name)
+      $musicSinger.attr('title', music.singer)
+      $musicSinger.text(music.singer)
+      $musicAlbum.attr('title', music.album)
+      $musicAlbum.text(music.album)
+
+      // 发布消息
+      PubSub.publish('toggleFooterSong', music)
+      PubSub.publish('toggleBackground', music.cover)
+    },
     // 监听鼠标移入歌曲列表事件
-    initEvents (player) {
+    initEvents () {
       var $this = this
       $('.content_list').on('mouseenter', '.list_music', function () {
         // 显示子菜单
@@ -259,24 +280,63 @@ export default {
         $item.find('.list_number').toggleClass('list_number2')
         $item.siblings().find('.list_number').removeClass('list_number2')
         // 3.5 播放音乐
-        player.playMusic($item.get(0).index, $item.get(0).music)
+        $this.player.playMusic($item.get(0).index, $item.get(0).music)
+        if (!($this.currentIndexCopy === $item.get(0).index)) {
+          // 3.6 切换歌曲信息
+          $this.initMusicInfo($item.get(0).music)
+          console.log('该切换歌曲啦')
+        }
         $this.currentIndexCopy = $item.get(0).index
+        console.log($this.currentIndexCopy, $item.get(0).index)
         // 3.6 切换歌曲信息
-        // initMusicInfo($item.get(0).music)
+        // $this.initMusicInfo($item.get(0).music)
+      })
+      // 7 监听删除按钮的点击
+      $('.content_list').on('click', '.list_menu_del', function () {
+        // 找到被点击的音乐
+        var $item = $(this).parents('.list_music')
+        // 判断当前删除的音乐是否正在播放
+        // eslint-disable-next-line eqeqeq
+        if ($item.get(0).index == $this.player.currentIndex) {
+          $('.list_music').eq($this.player.nextIndex()).find('.list_menu_play').trigger('click')
+        }
+        $item.remove()
+        $this.player.changeMusic($item.get(0).index)
+        // 重新排序
+        $('.list_music').each(function (index, ele) {
+          ele.index = index
+          $(ele).find('.list_number').text(index + 1)
+        })
+      })
+      // 8.监听播放的进度
+      $this.player.musicTimeUpdate(function (data) {
+        // 同步播放的时间
+        PubSub.publish('toggleFooterTime', data)
       })
     },
     // 供footer切换播放用
     togglePlayBody (play) {
-      console.log(this.currentIndexCopy)
-      if (this.currentIndexCopy === -1) {
+      // console.log('来自toggle的')
+      // console.log(this.player.currentIndex)
+      // console.log(this.player)
+      // eslint-disable-next-line eqeqeq
+      if (this.player.currentIndex == -1) {
         $('.list_music').eq(0).find('.list_menu_play').trigger('click')
       } else {
-        $('.list_music').eq(this.currentIndexCopy).find('.list_menu_play').trigger('click')
+        $('.list_music').eq(this.player.currentIndex).find('.list_menu_play').trigger('click')
       }
+    },
+    togglePreBody () {
+      $('.list_music').eq(this.player.preIndex()).find('.list_menu_play').trigger('click')
+    },
+    toggleNextBody () {
+      $('.list_music').eq(this.player.nextIndex()).find('.list_menu_play').trigger('click')
     }
   },
   mounted: function () {
     // 监听鼠标在歌曲列表行为
+    const $audio = $('audio')
+    this.player = new this.$Player($audio)
     this.requireList()
     // this.initEvents()
     // 初始化事件监听
@@ -284,6 +344,12 @@ export default {
     // 订阅消息
     PubSub.subscribe('togglePlayBody', (msg, index) => {
       this.togglePlayBody(index)
+    })
+    PubSub.subscribe('togglePreBody', (msg, index) => {
+      this.togglePreBody()
+    })
+    PubSub.subscribe('toggleNextBody', (msg, index) => {
+      this.toggleNextBody()
     })
   }
 }
