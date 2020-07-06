@@ -70,6 +70,7 @@ export default {
     }
   },
   mounted: function () {
+    var $this = this
     // 进度条
     var $progressBar = $('.music_progress_bar')
     var $progressLine = $('.music_progress_line')
@@ -87,9 +88,11 @@ export default {
     var $voiceDot = $('.music_voice_dot')
     this.progress2 = this.$Progress($voiceBar, $voiceLine, $voiceDot)
     this.progress2.progressClick(function (value) {
+      $('.music_voice_icon').removeClass('music_voice_icon2')
       PubSub.publish('toggleVoiceSeekTo', value)
     })
     this.progress2.progressMove(function (value) {
+      $('.music_voice_icon').removeClass('music_voice_icon2')
       PubSub.publish('toggleVoiceSeekTo', value)
     })
     // 订阅消息
@@ -126,7 +129,7 @@ export default {
         // 没有声音
         PubSub.publish('toggleMusicVoice', 0)
       } else {
-        PubSub.publish('toggleMusicVoice', 1)
+        PubSub.publish('toggleMusicVoice', $this.$store.state.voiceNumber)
       }
     })
   }

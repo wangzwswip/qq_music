@@ -80,13 +80,16 @@
     },
     // 拖动进度条时
     musicSeekTo: function (value) {
-      // var $this = this
+      if (isNaN(value)) return
       this.audio.currentTime = Math.round(this.audio.duration * value)
     },
     // 设置声音
     musicVoiceSeekTo: function (value) {
       // 0~1
-      this.audio.volume = value
+      if (isNaN(value)) return
+      if (value >= 0 && value <= 1) {
+        this.audio.volume = value
+      }
     }
   }
   Player.prototype.init.prototype = Player.prototype

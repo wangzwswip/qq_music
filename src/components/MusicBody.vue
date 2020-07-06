@@ -52,9 +52,7 @@
                 <div class="song_info__album" id="album_name">专辑名：<a href="javascrpt:;" title="寻雾启示" target="_blank">寻雾启示</a></div>
               </div>
               <div class="song_lyric">
-                <li class="song_lyric_cur">儿时凿壁偷了谁家的光</li>
-                <li>宿昔不梳一苦十年寒窗</li>
-                <li>如今等下闲读 红袖添香</li>
+                <ul class="song_lyric2"></ul>
               </div>
             </div>
         </div>
@@ -143,6 +141,7 @@ export default {
         this.player.musicList = songInfo
         this.creatList()
         this.initMusicInfo(songInfo[0])
+        this.initMusicLyric(songInfo[0])
       }
       this.initEvents()
       // this.addSongUrl()
@@ -194,10 +193,6 @@ export default {
       // 这里索引2才是li
       return $item
     },
-    // 根据歌曲id请求详细信息
-    requireSongInfo () {
-      this.$http.get()
-    },
     // 初始化歌曲信息
     initMusicInfo (music) {
       var $musicImage = $('.song_info__cover img')
@@ -217,6 +212,20 @@ export default {
       // 发布消息
       PubSub.publish('toggleFooterSong', music)
       PubSub.publish('toggleBackground', music.cover)
+    },
+    // 初始化歌词信息
+    initMusicLyric (music) {
+      var $this = this
+      var path = '/api/lyric?id=' + music.id
+      $this.Lyric = new this.$Lyric(path)
+      var $lryicContainer = $('.song_lyric2')
+      $lryicContainer.html('')
+      $this.Lyric.loadLyric(function () {
+        $.each($this.Lyric.lyrics, function (index, ele) {
+          var $item = $('<li>' + ele + '</li>')
+          $lryicContainer.append($item)
+        })
+      })
     },
     // 监听鼠标移入歌曲列表事件
     initEvents () {
@@ -270,6 +279,8 @@ export default {
         if (!($this.currentIndexCopy === $item.get(0).index)) {
           // 3.6 切换歌曲信息
           $this.initMusicInfo($item.get(0).music)
+          // 切换歌词
+          $this.initMusicLyric($item.get(0).music)
         }
         $this.currentIndexCopy = $item.get(0).index
       })
@@ -294,6 +305,16 @@ export default {
       $this.player.musicTimeUpdate(function (data) {
         // 同步播放的时间
         PubSub.publish('toggleFooterTime', data)
+        // 实现歌词同步
+        var index = $this.Lyric.currentIndex(data[0])
+        var $item = $('.song_lyric2 li').eq(index)
+        $item.addClass('song_lyric_cur')
+        $item.siblings().removeClass('song_lyric_cur')
+        if (index > 2) {
+          $('.song_lyric2').css({
+            marginTop: ((-index + 2) * 30) + 'px'
+          })
+        }
       })
     },
     // 供footer切换播放用
@@ -311,17 +332,22 @@ export default {
     toggleNextBody () {
       $('.list_music').eq(this.player.nextIndex()).find('.list_menu_play').trigger('click')
     },
-    toggleSeekTo (index) {
-      this.player.musicSeekTo(index)
+    toggleSeekTo (value) {
+      if (this.player.currentIndex === -1) return
+      this.player.musicSeekTo(value)
     },
     toggleMusicVoice (value) {
       this.player.musicVoiceSeekTo(value)
     },
-    toggleVoiceSeekTo (index) {
-      this.player.musicVoiceSeekTo(index)
+    toggleVoiceSeekTo (value) {
+      this.$store.commit('voiceSet', value)
+      this.player.musicVoiceSeekTo(value)
     }
   },
   mounted: function () {
+    // 歌词变量
+    // eslint-disable-next-line no-unused-vars
+    var Lyric
     // 监听鼠标在歌曲列表行为
     const $audio = $('audio')
     this.player = new this.$Player($audio)
@@ -525,16 +551,22 @@ $green-color: #31c27c
             width: 180px
             height: 180px
       .song_lyric
-        text-align: center
         margin-top: 30px
         height: 150px
         overflow: hidden
-        li
-          list-style: none
+        line-height: 30px
+        .song_lyric2
+          text-align: center
+          padding: 0
+          margin: 0
           line-height: 30px
-          font-weight: bold
-          color: rgba(255, 255, 255, 0.5)
-          cursor: -webkit-grab
-        .song_lyric_cur
-          color: $green-color
+          li
+            list-style: none
+            line-height: 30px
+            height: 30px
+            font-weight: bold
+            color: rgba(255, 255, 255, 0.5)
+            cursor: -webkit-grab
+          .song_lyric_cur
+            color: $green-color
 </style>

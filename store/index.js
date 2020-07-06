@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    playState: false
+    playState: false,
+    voiceNumber: 1
   },
 
   mutations: {
@@ -15,6 +16,10 @@ export default new Vuex.Store({
     },
     songPause (state) {
       state.playState = false
+    },
+    voiceSet (state, value) {
+      // 设置声音的值
+      state.voiceNumber = value
     }
   },
 

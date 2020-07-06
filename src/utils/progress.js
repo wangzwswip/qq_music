@@ -35,7 +35,7 @@
       var normalLeft = this.$progressBar.offset().left
       var eventLeft
       // var normalLeftBar = this.$progressBar.offset().left
-      // var barWidth = this.$progressBar.width()
+      var barWidth = this.$progressBar.width()
       // 1.监听鼠标按下事件
       this.$progressBar.mousedown(function () {
         $this.isInner = true
@@ -45,14 +45,11 @@
           // 获取点击的位置距离窗口的位置
           eventLeft = event.pageX
           var offset = eventLeft - normalLeft
-          $this.$progressLine.css('width', offset)
-          $this.$progressDot.css('left', offset)
-          console.log($this.isMove)
-          // if (offset >= 0 && offset <= barWidth) {
-          //   // 设置前景宽度
-          //   $this.$progressLine.css('width', offset)
-          //   $this.$progressDot.css('left', offset)
-          // }
+          if (offset >= 0 && offset <= barWidth) {
+            // 设置前景宽度
+            $this.$progressLine.css('width', offset)
+            $this.$progressDot.css('left', offset)
+          }
         })
       })
       // 3监听鼠标抬起
@@ -65,25 +62,20 @@
           var value = (eventLeft - normalLeft) / $this.$progressBar.width()
           callBack(value.toFixed(4))
         }
-        // $this.isMove = false
-        console.log($this.isMove)
       })
     },
     // 设置进度条随音乐变化
     setProgess: function (value) {
-      console.log('提前测试', this.isMove)
       var tmpvalue = value.toFixed(2)
       if (this.isMove) return
       // eslint-disable-next-line no-useless-return
       if (value < 0 || value > 100) return
       this.$progressLine.css({
         width: tmpvalue + '%'
-        // background: 'red'
       })
       this.$progressDot.css({
         left: tmpvalue + '%'
       })
-      console.log('在运行')
     }
   }
   Progress.prototype.init.prototype = Progress.prototype

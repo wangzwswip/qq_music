@@ -11,10 +11,12 @@ import '../src/assets/css/global.min.css'
 import store from '../store'
 import Player from '../src/utils/player'
 import Progress from '../src/utils/progress'
+import Lyric from '../src/utils/lyric'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.prototype.$Player = Player
+Vue.prototype.$Lyric = Lyric
 Vue.prototype.$Progress = Progress
 // 配置请求的根路径
 axios.defaults.baseURL = '/api/'
