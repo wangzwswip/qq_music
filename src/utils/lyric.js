@@ -44,7 +44,9 @@
         var lrc = ele.split(']')[1]
         $this.lyrics.push(lrc)
         // 排除空字符串(没有歌词的)
-        // if (lrc.length <= 1) return true
+        // console.log(typeof (lrc))
+        // eslint-disable-next-line valid-typeof
+        // if (typeof (lrc) === undefined) return true
         // $this.lyrics.push(lrc)
         // 处理时间
         var res = timeReg.exec(ele)
