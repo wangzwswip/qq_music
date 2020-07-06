@@ -75,8 +75,23 @@ export default {
     var $progressLine = $('.music_progress_line')
     var $progressDot = $('.music_progress_dot')
     this.progress = this.$Progress($progressBar, $progressLine, $progressDot)
-    this.progress.progressMove()
-    this.progress.progressClick()
+    this.progress.progressClick(function (value) {
+      PubSub.publish('toggleSeekTo', value)
+    })
+    this.progress.progressMove(function (value) {
+      PubSub.publish('toggleSeekTo', value)
+    })
+    // 声音进度条
+    var $voiceBar = $('.music_voice_bar')
+    var $voiceLine = $('.music_voice_line')
+    var $voiceDot = $('.music_voice_dot')
+    this.progress2 = this.$Progress($voiceBar, $voiceLine, $voiceDot)
+    this.progress2.progressClick(function (value) {
+      PubSub.publish('toggleVoiceSeekTo', value)
+    })
+    this.progress2.progressMove(function (value) {
+      PubSub.publish('toggleVoiceSeekTo', value)
+    })
     // 订阅消息
     PubSub.subscribe('togglePlay', (msg, index) => {
       this.togglePlay(index)
@@ -96,13 +111,23 @@ export default {
     })
     // 监听底部控制区域上一首按钮的点击
     $('.music_pre').click(function () {
-    //   console.log('上一首')
       PubSub.publish('togglePreBody')
     })
     // 监听底部控制区域下一首按钮的点击
     $('.music_next').click(function () {
-    //   console.log('下一首footer')
       PubSub.publish('toggleNextBody')
+    })
+    // 监听声音按钮的点击
+    $('.music_voice_icon').click(function () {
+      // 图标切换
+      $(this).toggleClass('music_voice_icon2')
+      // 声音切换
+      if ($(this).attr('class').indexOf('music_voice_icon2') !== -1) {
+        // 没有声音
+        PubSub.publish('toggleMusicVoice', 0)
+      } else {
+        PubSub.publish('toggleMusicVoice', 1)
+      }
     })
   }
 }

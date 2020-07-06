@@ -28,8 +28,6 @@
         this.$audio.attr('src', 'https://music.163.com/song/media/outer/url?id=' + music.id + '.mp3')
         this.audio.play()
         this.currentIndex = index
-        // console.log('来自player的')
-        // console.log(this.currentIndex)
       }
     },
     preIndex: function () {
@@ -74,12 +72,21 @@
     musicTimeUpdate: function (callBack) {
       var $this = this
       this.$audio.on('timeupdate', function () {
-        // console.log($this.player.getMusicDuration(), $this.player.getMusicCurrentTime())
         var duration = $this.audio.duration
         var currentTime = $this.audio.currentTime
         var timeStr = $this.formatTime(currentTime) + '/' + $this.formatTime(duration)
         callBack([currentTime, duration, timeStr])
       })
+    },
+    // 拖动进度条时
+    musicSeekTo: function (value) {
+      // var $this = this
+      this.audio.currentTime = Math.round(this.audio.duration * value)
+    },
+    // 设置声音
+    musicVoiceSeekTo: function (value) {
+      // 0~1
+      this.audio.volume = value
     }
   }
   Player.prototype.init.prototype = Player.prototype

@@ -112,7 +112,6 @@ export default {
     },
     // 请求歌单对应歌曲id
     async requireListId () {
-      // console.log(player.musicList)
       var songInfo = this.songInfo
       var soninfotmp = {}
       var tmpsinger = ''
@@ -142,22 +141,12 @@ export default {
         })
         // eslint-disable-next-line no-undef
         this.player.musicList = songInfo
-        // console.log(player.musicList)
-        // console.log(this.songInfo)
         this.creatList()
         this.initMusicInfo(songInfo[0])
       }
       this.initEvents()
       // this.addSongUrl()
     },
-    // 加载歌曲URL
-    // async addSongUrl () {
-    //   // var $this = this
-    //   $.each(this.songInfo, function (index, ele) {
-    //     console.log(ele.id)
-    //     // console.log($this.$http.get('playlist/url?id=' + ele.id))
-    //   })
-    // },
     // 处理时间
     formatTime (time) {
       var Min = parseInt(time / 60)
@@ -178,7 +167,6 @@ export default {
         ele.time = $this.formatTime(ele.time)
         var $item = $this.creatMusicItem(index, ele)
         $musicList.append($item)
-        // console.log(Object.keys($item.get(0)))
       })
     },
     // 创建一条音乐
@@ -255,8 +243,6 @@ export default {
       // var $musicPlay = $('.music_play')
       $('.content_list').on('click', '.list_menu_play', function () {
         var $item = $(this).parents('.list_music')
-        // console.log($item.get(0).music) 这里索引1
-        // console.log($item.get(0).index)
         // 3.1 切换播放图标
         $(this).toggleClass('list_menu_play2')
         // 3.2 复原其他的播放图标
@@ -284,12 +270,8 @@ export default {
         if (!($this.currentIndexCopy === $item.get(0).index)) {
           // 3.6 切换歌曲信息
           $this.initMusicInfo($item.get(0).music)
-          console.log('该切换歌曲啦')
         }
         $this.currentIndexCopy = $item.get(0).index
-        console.log($this.currentIndexCopy, $item.get(0).index)
-        // 3.6 切换歌曲信息
-        // $this.initMusicInfo($item.get(0).music)
       })
       // 7 监听删除按钮的点击
       $('.content_list').on('click', '.list_menu_del', function () {
@@ -316,9 +298,6 @@ export default {
     },
     // 供footer切换播放用
     togglePlayBody (play) {
-      // console.log('来自toggle的')
-      // console.log(this.player.currentIndex)
-      // console.log(this.player)
       // eslint-disable-next-line eqeqeq
       if (this.player.currentIndex == -1) {
         $('.list_music').eq(0).find('.list_menu_play').trigger('click')
@@ -331,6 +310,15 @@ export default {
     },
     toggleNextBody () {
       $('.list_music').eq(this.player.nextIndex()).find('.list_menu_play').trigger('click')
+    },
+    toggleSeekTo (index) {
+      this.player.musicSeekTo(index)
+    },
+    toggleMusicVoice (value) {
+      this.player.musicVoiceSeekTo(value)
+    },
+    toggleVoiceSeekTo (index) {
+      this.player.musicVoiceSeekTo(index)
     }
   },
   mounted: function () {
@@ -338,9 +326,7 @@ export default {
     const $audio = $('audio')
     this.player = new this.$Player($audio)
     this.requireList()
-    // this.initEvents()
     // 初始化事件监听
-    // console.log(this.$store.state.playState)
     // 订阅消息
     PubSub.subscribe('togglePlayBody', (msg, index) => {
       this.togglePlayBody(index)
@@ -350,6 +336,15 @@ export default {
     })
     PubSub.subscribe('toggleNextBody', (msg, index) => {
       this.toggleNextBody()
+    })
+    PubSub.subscribe('toggleSeekTo', (msg, index) => {
+      this.toggleSeekTo(index)
+    })
+    PubSub.subscribe('toggleMusicVoice', (msg, index) => {
+      this.toggleMusicVoice(index)
+    })
+    PubSub.subscribe('toggleVoiceSeekTo', (msg, index) => {
+      this.toggleVoiceSeekTo(index)
     })
   }
 }
